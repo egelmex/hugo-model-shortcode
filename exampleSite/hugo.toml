@@ -1,0 +1,6 @@
+baseURL = "https://example.org/"
+title = "hugo-model-shortcode"
+# the theme is this site's parent directory; a real site just puts it in themes/
+themesDir = "../.."
+theme = ["hugo-model-shortcode"]
+disableKinds = ["taxonomy", "term", "RSS", "sitemap"]

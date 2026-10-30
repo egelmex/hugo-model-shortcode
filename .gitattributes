@@ -1,0 +1,6 @@
+* text=auto eol=lf
+
+# 3D model files: leave bytes untouched
+*.obj -text
+*.stl -text
+*.3mf binary

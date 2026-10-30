@@ -1,0 +1,7 @@
+{{- /* what the model shortcode needs, in the head of pages that use it (.: the page). three.js (static/vendor/three/,
+       unmodified from npm) is only fetched once a model is near the viewport, by assets/js/model.js */ -}}
+{{- if .HasShortcode "model" }}
+<style>{{ (resources.Get "css/model.css").Content | safeCSS }}</style>
+<script type="importmap">{{ dict "imports" (dict "three" ("vendor/three/build/three.module.js" | relURL) "three/addons/" ("vendor/three/examples/jsm/" | relURL)) | jsonify | safeHTML }}</script>
+<script type="module" src="{{ (resources.Get "js/model.js" | fingerprint).RelPermalink }}"></script>
+{{- end -}}

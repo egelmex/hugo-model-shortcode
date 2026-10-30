@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Title }}</title>
+<link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+{{- /* the one line a site's head needs for the shortcode */}}
+{{- partial "model-head.html" . }}
+</head>
+<body>
+<main>
+<button id="theme" type="button">Toggle dark mode</button>
+{{- block "main" . }}{{ end }}
+</main>
+<script>
+document.getElementById('theme').addEventListener('click',function(){
+  var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  r.dataset.theme=dark?'light':'dark'});
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{{- /* a 3D model (.stl, .3mf or .obj) from the page bundle, shown as a figure that can be rotated (assets/js/model.js, with
+       partials/model-head.html); without JS, or if it can't load, the stage just offers the file.
+       color: any CSS colour, or a CSS variable (--name or var(--name), which follows the theme), default --model-color
+       (assets/css/model.css, as are the other variables a theme can set). ratio: the stage's aspect-ratio, default 4/3. rotation: where the view starts, "spin,tilt"
+       in degrees (spin round the model from its front, tilt above it), default 35,28. modes: comma-separated from solid,
+       flat, wireframe, xray and normals, first one showing, default solid; two or more get buttons to switch. */ -}}
+{{- $src := .Get "src" -}}
+{{- $res := .Page.Resources.Get $src -}}
+{{- if not $res }}{{ errorf "%s: model %q not found in the page bundle" .Position $src }}{{ end -}}
+{{- $format := strings.TrimPrefix "." (path.Ext $src) | lower -}}
+{{- if not (in (slice "stl" "3mf" "obj") $format) }}{{ errorf "%s: model %q is not an .stl, .3mf or .obj" .Position $src }}{{ end -}}
+{{- $style := slice (printf "aspect-ratio:%s" (.Get "ratio" | default "4/3")) -}}
+{{- with .Get "color" }}{{ $style = $style | append (printf "--model-color:%s" (cond (hasPrefix . "--") (printf "var(%s)" .) .)) }}{{ end -}}
+{{- $rotation := .Get "rotation" | default "35,28" | replaceRE `\s` "" -}}
+{{- if not (findRE `^-?[0-9.]+,-?[0-9.]+$` $rotation) }}{{ errorf "%s: model rotation %q is not \"spin,tilt\" in degrees" .Position $rotation }}{{ end -}}
+{{- $modes := slice -}}
+{{- range split (.Get "modes" | default "solid") "," -}}
+  {{- $mode := trim . " " -}}
+  {{- if not (in (slice "solid" "flat" "wireframe" "xray" "normals") $mode) }}{{ errorf "%s: unknown model mode %q" $.Position $mode }}{{ end -}}
+  {{- $modes = $modes | append $mode -}}
+{{- end -}}
+<figure class="model{{ with .Get "class" }} {{ . }}{{ end }}" data-model="{{ $res.RelPermalink }}" data-format="{{ $format }}" data-rotation="{{ $rotation }}" data-modes="{{ delimit ($modes | uniq) "," }}">
+  <div class="model__stage" style="{{ delimit $style ";" | safeCSS }}">
+    <div class="model__view" role="img" aria-label="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify | plainify | htmlUnescape }}{{ end }}"></div>
+    <span class="model__status"><noscript>3D preview needs JavaScript</noscript></span>
+    <a class="model__download" href="{{ $res.RelPermalink }}" download>download .{{ $format }}</a>
+  </div>
+  {{- if or (.Get "title") (.Get "caption") (.Get "attr") }}
+  <figcaption>
+    {{- with .Get "title" }}<h4>{{ . }}</h4>{{ end -}}
+    {{- if or (.Get "caption") (.Get "attr") }}<p>
+      {{- .Get "caption" | markdownify -}}
+      {{- if and (.Get "caption") (.Get "attr") }} {{ end -}}
+      {{- with .Get "attrlink" }}<a href="{{ . }}">{{ end -}}
+      {{- .Get "attr" | markdownify -}}
+      {{- if .Get "attrlink" }}</a>{{ end -}}
+    </p>{{ end -}}
+  </figcaption>
+  {{- end }}
+</figure>

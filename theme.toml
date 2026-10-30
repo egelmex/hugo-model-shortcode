@@ -1,0 +1,7 @@
+name = "hugo-model-shortcode"
+license = "MIT"
+description = "A shortcode showing .stl, .3mf and .obj models from a page bundle in a rotatable three.js view."
+min_version = "0.134.0"
+
+[author]
+  name = "Martin Ellis"
