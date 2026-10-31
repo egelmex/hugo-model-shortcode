@@ -3,7 +3,8 @@
        color: any CSS colour, or a CSS variable (--name or var(--name), which follows the theme), default --model-color
        (assets/css/model.css, as are the other variables a theme can set). ratio: the stage's aspect-ratio, default 4/3. rotation: where the view starts, "spin,tilt"
        in degrees (spin round the model from its front, tilt above it), default 35,28. modes: comma-separated from solid,
-       flat, wireframe, xray and normals, first one showing, default solid; two or more get buttons to switch. */ -}}
+       flat, wireframe, xray and normals, first one showing, default solid; two or more get buttons to switch.
+       download: "false" leaves out the download link. */ -}}
 {{- $src := .Get "src" -}}
 {{- $res := .Page.Resources.Get $src -}}
 {{- if not $res }}{{ errorf "%s: model %q not found in the page bundle" .Position $src }}{{ end -}}
@@ -23,7 +24,9 @@
   <div class="model__stage" style="{{ delimit $style ";" | safeCSS }}">
     <div class="model__view" role="img" aria-label="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify | plainify | htmlUnescape }}{{ end }}"></div>
     <span class="model__status"><noscript>3D preview needs JavaScript</noscript></span>
+    {{- if ne (.Get "download") "false" }}
     <a class="model__download" href="{{ $res.RelPermalink }}" download>download .{{ $format }}</a>
+    {{- end }}
   </div>
   {{- if or (.Get "title") (.Get "caption") (.Get "attr") }}
   <figcaption>

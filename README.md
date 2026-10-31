@@ -49,6 +49,7 @@ Either way, call the partial from your `<head>`. It adds nothing to pages withou
 | `ratio` | The stage's `aspect-ratio`. Default `4/3` |
 | `rotation` | The starting view as `"spin,tilt"` in degrees. Default `35,28` |
 | `modes` | Comma-separated from `solid`, `flat`, `wireframe`, `xray` and `normals`. The first shows initially, and two or more get buttons. Default `solid` |
+| `download` | `"false"` leaves out the download link |
 | `class` | Extra classes for the figure |
 
 Drag rotates. Ctrl+scroll or a pinch zooms, while a plain scroll or a vertical swipe moves the page. Double-click resets the view. Wireframe draws only creases over 30°, and colours in 3MF files are ignored.
